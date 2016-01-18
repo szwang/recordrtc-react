@@ -63,22 +63,26 @@ class RecordPage extends React.Component {
       if(!isFirefox) {
         this.state.recordVideo.getDataURL((videoDataURL) => {
           prepareData(audioDataURL, videoDataURL)
+          .then((files) => {
+            RecorderActionCreators.postFiles(files);
+          });
         })
       } else {
         prepareData(audioDataURL)
+        .then((files) => {
+          RecorderActionCreators.postFiles(files);
+        });
       }
-
-      .then((files) => {
-        RecorderActionCreators.postFiles(files);
-      });
     });
   }
 
   render() {
-    <div>
-      <Webcam />
-      <button>Start Record</button>
-    </div>
+    return(
+      <div>
+        <Webcam />
+        <button onClick={this.startRecord}>Start Record</button>
+      </div>
+    )
   }
 }
 

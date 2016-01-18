@@ -1,3 +1,5 @@
+
+
 export function captureUserMedia(callback) {
   var params = {
     audio: true,
@@ -23,12 +25,11 @@ export function prepareData(audioDataURL, videoDataURL) {
     }
 
     files.audio = {
-      name: id + (isFirefox ? '.webm' : '.wav'),
-      type: isFirefox ? 'video/webm' : 'audio/wav',
+      name: id + (!videoDataURL ? '.webm' : '.wav'), //if only one parameter, then it's a webm file
+      type: !videoDataURL ? 'video/webm' : 'audio/wav',
       contents: audioDataURL
     }
 
-    files.isFirefox = isFirefox;
     files.name = id;
 
     resolve(files);

@@ -1,6 +1,11 @@
 import React from 'react';
 import { captureUserMedia } from '../utils/RecordUtils';
 
+function hasGetUserMedia() {
+  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia);
+}
+
 class Webcam extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +31,7 @@ class Webcam extends React.Component {
 
   render() {
     return (
-      <video src={this.state.src} />
+      <video autoPlay muted src={this.state.src} />
     )
   }
 }
