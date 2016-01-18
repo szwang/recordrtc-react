@@ -22,6 +22,24 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json({ limit: '50mb' }));
 
+app.post('/upload', function(req, res) {
+  var files = req.body;
+  
+  if(!files.video) {
+    utils.uploadToDisk(files.audio, true)
+    .then(function(success) {
+      res.send(success);
+    })
+  } else {
+    utils.uploadToDisk(files.audio, false)
+    .then(function() { utils.uploadToDisk(files.video, false) })
+    .then(function() { return utils.merge(files) })
+    .then(function(success) {
+      res.send(success);
+    })
+  }
+})
+
 app.use('/', express.static(path.join(__dirname, '/build')));
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, '/src/index.html'));

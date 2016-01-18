@@ -1,10 +1,8 @@
 export default {
   postFiles(data) {
     var body = JSON.stringify(data);
-    console.log('files received, ', body, data)
-    var id = data.name;
 
-    fetch('/videoUpload', {
+    fetch('/upload', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -19,8 +17,7 @@ export default {
       Dispatcher.dispatch({
         type: ActionType.UPLOAD_STATUS,
         uploading: false,
-        success: json.success,
-        id: id
+        success: json.success
       })
     })
     .catch((err) => {
