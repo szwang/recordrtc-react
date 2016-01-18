@@ -8,3 +8,29 @@ export function captureUserMedia(callback) {
     alert(JSON.stringify(error));
   });
 };
+
+export function prepareData(audioDataURL, videoDataURL) {
+  return new Promise((resolve, reject) => {
+    let files = {};
+    let id = Math.floor(Math.random()*90000) + 10000;
+
+    if(videoDataURL) {
+      files.video = {
+          name: id + '.webm',
+          type: 'video/webm',
+          contents: videoDataURL
+      }
+    }
+
+    files.audio = {
+      name: id + (isFirefox ? '.webm' : '.wav'),
+      type: isFirefox ? 'video/webm' : 'audio/wav',
+      contents: audioDataURL
+    }
+
+    files.isFirefox = isFirefox;
+    files.name = id;
+
+    resolve(files);
+  })
+};

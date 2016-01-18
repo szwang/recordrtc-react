@@ -1,36 +1,10 @@
 import React from 'react';
 import RecordRTC from 'recordrtc';
-import { captureUserMedia } from '../utils/RecordUtils';
+import { captureUserMedia, prepareData } from '../utils/RecordUtils';
 import Webcam from './Webcam.react';
 import RecorderActionCreators from '../actions/RecorderActionCreators';
 
 const isFirefox = !!navigator.mozGetUserMedia;
-
-function prepareData(audioDataURL, videoDataURL) {
-  return new Promise((resolve, reject) => {
-    let files = {};
-    let id = Math.floor(Math.random()*90000) + 10000;
-
-    if(videoDataURL) {
-      files.video = {
-          name: id + '.webm',
-          type: 'video/webm',
-          contents: videoDataURL
-      }
-    }
-
-    files.audio = {
-      name: id + (isFirefox ? '.webm' : '.wav'),
-      type: isFirefox ? 'video/webm' : 'audio/wav',
-      contents: audioDataURL
-    }
-
-    files.isFirefox = isFirefox;
-    files.name = id;
-
-    resolve(files);
-  })
-};
 
 class RecordPage extends React.Component {
   constructor(props) {
