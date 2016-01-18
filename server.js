@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var webpack = require('webpack');
 var config = require('./webpack.config');
+var utils = require('./serverUtils.js');
 
 var app = express();
 
@@ -24,21 +25,24 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 app.post('/upload', function(req, res) {
   var files = req.body;
-  
+
   if(!files.video) {
     utils.uploadToDisk(files.audio, true)
-    .then(function(success) {
-      res.send(success);
+    .then(function(status) {
+      res.send(status);
     })
   } else {
+    utils.uploadToDisk(files.video, false);
     utils.uploadToDisk(files.audio, false)
-    .then(function() { utils.uploadToDisk(files.video, false) })
-    .then(function() { return utils.merge(files) })
-    .then(function(success) {
-      res.send(success);
+    .then(function() { 
+      return utils.merge(files);
+    })
+    .then(function(status) {
+      console.log(status)
+      res.send(status);
     })
   }
-})
+});
 
 app.use('/', express.static(path.join(__dirname, '/build')));
 app.get('*', function(req, res) {

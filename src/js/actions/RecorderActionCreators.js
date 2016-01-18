@@ -15,9 +15,9 @@ export default {
     })
     .then((json) => {
       Dispatcher.dispatch({
-        type: ActionType.UPLOAD_STATUS,
-        uploading: false,
-        success: json.success
+        type: ActionType.UPLOAD_RESPONSE,
+        success: json.success,
+        link: json.link
       })
     })
     .catch((err) => {
