@@ -7,28 +7,30 @@ import RecorderActionCreators from '../actions/RecorderActionCreators';
 const isFirefox = !!navigator.mozGetUserMedia;
 
 function prepareData(audioDataURL, videoDataURL) {
-  let files = {};
-  let id = Math.floor(Math.random()*90000) + 10000;
+  return new Promise((resolve, reject) => {
+    let files = {};
+    let id = Math.floor(Math.random()*90000) + 10000;
 
-  if(videoDataURL) {
-    files.video = {
-        name: id + '.webm',
-        type: 'video/webm',
-        contents: videoDataURL
+    if(videoDataURL) {
+      files.video = {
+          name: id + '.webm',
+          type: 'video/webm',
+          contents: videoDataURL
+      }
     }
-  }
 
-  files.audio = {
-    name: id + (isFirefox ? '.webm' : '.wav'),
-    type: isFirefox ? 'video/webm' : 'audio/wav',
-    contents: audioDataURL
-  }
+    files.audio = {
+      name: id + (isFirefox ? '.webm' : '.wav'),
+      type: isFirefox ? 'video/webm' : 'audio/wav',
+      contents: audioDataURL
+    }
 
-  files.isFirefox = isFirefox;
-  files.name = id;
+    files.isFirefox = isFirefox;
+    files.name = id;
 
-  RecorderActionCreators.postFiles(files);
-}
+    resolve(files);
+  })
+};
 
 class RecordPage extends React.Component {
   constructor(props) {
@@ -86,11 +88,15 @@ class RecordPage extends React.Component {
     this.state.recordAudio.getDataURL((audioDataURL) => {
       if(!isFirefox) {
         this.state.recordVideo.getDataURL((videoDataURL) => {
-          this.prepareData(audioDataURL, videoDataURL);
+          this.prepareData(audioDataURL, videoDataURL)
         })
       } else {
-        this.prepareData(audioDataURL);
+        this.prepareData(audioDataURL)
       }
+
+      .then((files) => {
+        RecorderActionCreators.postFiles(files);
+      });
     });
   }
 
