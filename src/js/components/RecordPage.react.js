@@ -88,10 +88,10 @@ class RecordPage extends React.Component {
     this.state.recordAudio.getDataURL((audioDataURL) => {
       if(!isFirefox) {
         this.state.recordVideo.getDataURL((videoDataURL) => {
-          this.prepareData(audioDataURL, videoDataURL)
+          prepareData(audioDataURL, videoDataURL)
         })
       } else {
-        this.prepareData(audioDataURL)
+        prepareData(audioDataURL)
       }
 
       .then((files) => {

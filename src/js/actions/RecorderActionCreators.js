@@ -1,5 +1,6 @@
 export function postFiles(data) {
   var body = JSON.stringify(data);
+  console.log('files received, ', body, data)
   var id = data.name;
 
   fetch('/videoUpload', {
