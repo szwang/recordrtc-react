@@ -1,4 +1,5 @@
 import React from 'react';
+import { captureUserMedia } from '../utils/RecordUtils';
 
 class Webcam extends React.Component {
   constructor(props) {
@@ -18,16 +19,8 @@ class Webcam extends React.Component {
   }
 
   requestUserMedia() {
-    this.captureUserMedia((stream) => {
+    captureUserMedia((stream) => {
       this.setState({ src: window.URL.createObjectURL(stream) });
-    });
-  }
-
-  captureUserMedia(callback) {
-    var params = { audio: false, video: true };
-
-    navigator.getUserMedia(params, callback, (error) => {
-      alert(JSON.stringify(error));
     });
   }
 
