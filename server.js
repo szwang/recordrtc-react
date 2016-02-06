@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var webpack = require('webpack');
 var config = require('./webpack.config');
-var utils = require('./serverUtils.js');
+var s3Router = require('./serverUtils.js');
 
 var app = express();
 

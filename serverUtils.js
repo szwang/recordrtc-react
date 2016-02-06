@@ -16,12 +16,6 @@ function S3Router(options) {
     throw new Error("S3_BUCKET is required.");
   }
 
-  var s3Options = {};
-
-  if (options.region) {
-    s3Options.region = options.region;
-  }
-
   var router = express.Router();
 
   function findType(string) {
@@ -33,10 +27,10 @@ function S3Router(options) {
     var filename = req.query.objectName;
     var mimeType = req.query.contentType;
     var ext = '.' + findType(mimeType);
-    console.log(ext)
+    console.log(ext);
     var fileKey = checkTrailingSlash(getFileKeyDir(req)) + filename + ext;
 
-    var s3 = new aws.S3(s3Options);
+    var s3 = new aws.S3();
 
     var params = {
       Bucket: S3_BUCKET,
@@ -51,7 +45,7 @@ function S3Router(options) {
         console.log(err);
         return res.send(500, "Cannot create S3 signed URL");
       }
-      
+
       console.log('data: ', data)
       res.json({
         signedUrl: data,
