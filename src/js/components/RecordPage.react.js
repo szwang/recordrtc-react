@@ -2,9 +2,9 @@ import React from 'react';
 import RecordRTC from 'recordrtc';
 import { captureUserMedia, prepareData } from '../utils/RecordUtils';
 import Webcam from './Webcam.react';
-import RecorderActionCreators from '../actions/RecorderActionCreators';
 
-const isFirefox = !!navigator.mozGetUserMedia;
+const hasGetUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                        navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
 class RecordPage extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class RecordPage extends React.Component {
   }
 
   componentDidMount() {
-    if(!hasGetUserMedia()) {
+    if(!hasGetUserMedia) {
       alert("Your browser cannot stream from your webcam. Please switch to Chrome or Firefox.");
       return;
     }
@@ -31,8 +31,10 @@ class RecordPage extends React.Component {
   }
 
   requestUserMedia() {
+    console.log('requestUserMedia')
     captureUserMedia((stream) => {
       this.setState({ src: window.URL.createObjectURL(stream) });
+      console.log('setting state', this.state)
     });
   }
 
@@ -54,23 +56,18 @@ class RecordPage extends React.Component {
 
   stopRecord() {
     this.state.recordVideo.stopRecording(() => {
-      this.onStopRecording();
+      var blob = this.state.recordVideo.blob;
+      console.log('blob: ', blob)
     });
   }
 
   onStopRecording() {
-    this.state.recordAudio.getDataURL((videoDataURL) => {
-      prepareData(videoDataURL)
-      .then((files) => {
-        RecorderActionCreators.postFiles(files);
-      });
-    });
   }
 
   render() {
     return(
       <div>
-        <Webcam />
+        <Webcam src={this.state.src} />
         <button onClick={this.startRecord}>Start Record</button>
       </div>
     )
