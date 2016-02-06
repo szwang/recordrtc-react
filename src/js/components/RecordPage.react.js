@@ -11,34 +11,40 @@ class RecordPage extends React.Component {
     super(props);
 
     this.state = {
-      recordAudio: null,
       recordVideo: null,
-      mediaStream: null
+      mediaStream: null,
+      src: null
     };
 
+    this.requestUserMedia = this.requestUserMedia.bind(this);
     this.startRecord = this.startRecord.bind(this);
     this.stopRecord = this.stopRecord.bind(this);
     this.onStopRecording = this.onStopRecording.bind(this);
+  }
+
+  componentDidMount() {
+    if(!hasGetUserMedia()) {
+      alert("Your browser cannot stream from your webcam. Please switch to Chrome or Firefox.");
+      return;
+    }
+    this.requestUserMedia();
+  }
+
+  requestUserMedia() {
+    captureUserMedia((stream) => {
+      this.setState({ src: window.URL.createObjectURL(stream) });
+    });
   }
 
   startRecord() {
     captureUserMedia((stream) => {
       this.setState({ mediaStream: stream });
 
-      this.state.recordAudio = RecordRTC(stream, {
-        bufferSize: 16384
+      this.state.recordVideo = RecordRTC(stream, {
+        type: 'video'
       });
 
-      if(!isFirefox) {
-        this.state.recordVideo = RecordRTC(stream, {
-          type: 'video'
-        });
-      }
-
-      this.state.recordAudio.startRecording();
-      if(!isFirefox) {
-        this.state.recordVideo.startRecording();
-      }
+      this.state.recordVideo.startRecording();
     });
 
     setTimeout(() => {
@@ -47,32 +53,17 @@ class RecordPage extends React.Component {
   }
 
   stopRecord() {
-    this.state.recordAudio.stopRecording(() => {
-      if(isFirefox) this.onStopRecording();
-    })
-
-    if(!isFirefox) {
-      this.state.recordVideo.stopRecording(() => {
-        this.onStopRecording();
-      });
-    }
+    this.state.recordVideo.stopRecording(() => {
+      this.onStopRecording();
+    });
   }
 
   onStopRecording() {
-    this.state.recordAudio.getDataURL((audioDataURL) => {
-      if(!isFirefox) {
-        this.state.recordVideo.getDataURL((videoDataURL) => {
-          prepareData(audioDataURL, videoDataURL)
-          .then((files) => {
-            RecorderActionCreators.postFiles(files);
-          });
-        })
-      } else {
-        prepareData(audioDataURL)
-        .then((files) => {
-          RecorderActionCreators.postFiles(files);
-        });
-      }
+    this.state.recordAudio.getDataURL((videoDataURL) => {
+      prepareData(videoDataURL)
+      .then((files) => {
+        RecorderActionCreators.postFiles(files);
+      });
     });
   }
 
