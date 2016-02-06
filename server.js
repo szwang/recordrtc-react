@@ -21,28 +21,12 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json());
 
-app.post('/upload', function(req, res) {
-  var files = req.body;
-
-  if(!files.video) {
-    utils.uploadToDisk(files.audio, true)
-    .then(function(status) {
-      res.send(status);
-    })
-  } else {
-    utils.uploadToDisk(files.video, false);
-    utils.uploadToDisk(files.audio, false)
-    .then(function() { 
-      return utils.merge(files);
-    })
-    .then(function(status) {
-      console.log(status)
-      res.send(status);
-    })
-  }
-});
+app.use('/s3', require('./s3Router')({
+  bucket: 'recordrtc-test',
+  ACL: 'public-read'
+}))
 
 app.use('/', express.static(path.join(__dirname, '/build')));
 app.get('*', function(req, res) {
