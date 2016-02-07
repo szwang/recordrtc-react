@@ -70,7 +70,7 @@ class RecordPage extends React.Component {
         if(success) {
           this.setState({ uploadSuccess: true });
         } else {
-          this.setState({ uploadSuccess: false });
+          alert('Upload failed :(')
         }
       })
     });
@@ -82,6 +82,7 @@ class RecordPage extends React.Component {
   render() {
     return(
       <div>
+        {this.state.uploadSuccess ? <div>Upload success!</div> : null}
         <Webcam src={this.state.src} />
         <button onClick={this.startRecord}>Start Record</button>
       </div>
@@ -91,11 +92,3 @@ class RecordPage extends React.Component {
 
 export default RecordPage;
 
-function dataURItoBlob(dataURI) {
-  var binary = atob(dataURI.split(',')[1]);
-  var array = [];
-  for(var i = 0; i < binary.length; i++) {
-    array.push(binary.charCodeAt(i));
-  }
-  return new Blob([new Uint8Array(array)]);
-}
