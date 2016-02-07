@@ -25,40 +25,25 @@ function createCORSRequest(method, url) {
   return xhr;
 };
 
-function uploadToS3(s3Info, fileInfo) {
+export default function S3Upload(fileInfo) { //parameters: type, data, id
   return new Promise((resolve, reject) => {
-    var xhr = createCORSRequest('PUT', s3Info.signedUrl);
-    
-    if (!xhr) {
-      alert('CORS not supported');
-    } else {
+    getSignedUrl(fileInfo)
+    .then((s3Info) => {
+      // upload to S3
+      var xhr = createCORSRequest('PUT', s3Info.signedUrl);
+      
       xhr.onload = function() {
         if (xhr.status === 200) {
-          console.log('upload complete')
           resolve(true);
         } else {
-          alert('Upload error! Refresh the page and try again.')
+          reject(xhr.status);
         }
       };
-    }
 
-    xhr.setRequestHeader('Content-Type', fileInfo.type);
-    xhr.setRequestHeader('x-amz-acl', 'public-read');
+      xhr.setRequestHeader('Content-Type', fileInfo.type);
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
 
-    return xhr.send(fileInfo.data);
-  })
-}
-
-export default function S3Upload(params) { //parameters: type, data, id
-  return new Promise((resolve, reject) => {
-    getSignedUrl(params)
-    .then((json) => {
-      console.log(json)
-      return uploadToS3(json, params)
-    })
-    .then((success) => {
-      if(success) resolve(true);
-      else reject(false);
+      return xhr.send(fileInfo.data);
     })
   })
 }

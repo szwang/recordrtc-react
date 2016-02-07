@@ -69,9 +69,9 @@ class RecordPage extends React.Component {
       .then((success) => {
         if(success) {
           this.setState({ uploadSuccess: true });
-        } else {
-          alert('Upload failed :(')
         }
+      }, (error) => {
+        alert(error, 'error occurred. check your aws settings and try again.')
       })
     });
   }
