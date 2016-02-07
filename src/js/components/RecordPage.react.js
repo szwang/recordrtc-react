@@ -14,7 +14,8 @@ class RecordPage extends React.Component {
     this.state = {
       recordVideo: null,
       mediaStream: null,
-      src: null
+      src: null,
+      uploadSuccess: null
     };
 
     this.requestUserMedia = this.requestUserMedia.bind(this);
@@ -65,6 +66,13 @@ class RecordPage extends React.Component {
         id: 1234
       }
       S3Upload(params)
+      .then((success) => {
+        if(success) {
+          this.setState({ uploadSuccess: true });
+        } else {
+          this.setState({ uploadSuccess: false });
+        }
+      })
     });
   }
 
