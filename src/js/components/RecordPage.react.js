@@ -83,8 +83,8 @@ class RecordPage extends React.Component {
     return(
       <div>
         {this.state.uploadSuccess ? <div>Upload success!</div> : null}
-        <Webcam src={this.state.src} />
-        <button onClick={this.startRecord}>Start Record</button>
+        <div><Webcam src={this.state.src}/></div>
+        <div><button onClick={this.startRecord}>Start Record</button></div>
       </div>
     )
   }
