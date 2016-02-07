@@ -2,13 +2,6 @@
 var aws = require('aws-sdk');
 var express = require('express');
 
-function checkTrailingSlash(path) {
-  if (path && path[path.length-1] != '/') {
-    path += '/';
-  }
-  return path;
-}
-
 function S3Router(options) {
   var S3_BUCKET = options.bucket;
 
@@ -28,7 +21,7 @@ function S3Router(options) {
     var mimeType = req.query.contentType;
     var ext = '.' + findType(mimeType);
     console.log(ext);
-    var fileKey = checkTrailingSlash(getFileKeyDir(req)) + filename + ext;
+    var fileKey = filename + ext;
 
     var s3 = new aws.S3();
 

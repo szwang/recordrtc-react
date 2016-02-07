@@ -2,6 +2,7 @@ import React from 'react';
 import RecordRTC from 'recordrtc';
 import { captureUserMedia, prepareData } from '../utils/RecordUtils';
 import Webcam from './Webcam.react';
+import S3Upload from '../utils/S3Utils';
 
 const hasGetUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
                         navigator.mozGetUserMedia || navigator.msGetUserMedia);
@@ -58,6 +59,12 @@ class RecordPage extends React.Component {
     this.state.recordVideo.stopRecording(() => {
       var blob = this.state.recordVideo.blob;
       console.log('blob: ', blob)
+      var params = {
+        type: 'video/webm',
+        data: blob,
+        id: 1234
+      }
+      S3Upload(params)
     });
   }
 
@@ -75,3 +82,12 @@ class RecordPage extends React.Component {
 }
 
 export default RecordPage;
+
+function dataURItoBlob(dataURI) {
+  var binary = atob(dataURI.split(',')[1]);
+  var array = [];
+  for(var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  return new Blob([new Uint8Array(array)]);
+}
