@@ -1,4 +1,13 @@
+// handle user media capture
+export function captureUserMedia(callback) {
+  var params = { audio: false, video: true };
 
+  navigator.getUserMedia(params, callback, (error) => {
+    alert(JSON.stringify(error));
+  });
+};
+
+// handle S3 upload
 function getSignedUrl(file) {
   let queryString = '?objectName=' + file.id + '&contentType=' + encodeURIComponent(file.type);
   return fetch('/s3/sign' + queryString)
@@ -25,7 +34,7 @@ function createCORSRequest(method, url) {
   return xhr;
 };
 
-export default function S3Upload(fileInfo) { //parameters: type, data, id
+export function S3Upload(fileInfo) { //parameters: { type, data, id }
   return new Promise((resolve, reject) => {
     getSignedUrl(fileInfo)
     .then((s3Info) => {

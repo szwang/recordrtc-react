@@ -1,8 +1,7 @@
 import React from 'react';
 import RecordRTC from 'recordrtc';
-import { captureUserMedia } from '../utils/RecordUtils';
+import { captureUserMedia, S3Upload } from '../utils/RecordUtils';
 import Webcam from './Webcam.react';
-import S3Upload from '../utils/S3Utils';
 import { Modal } from 'react-bootstrap';
 
 const hasGetUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
