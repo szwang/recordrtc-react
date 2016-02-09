@@ -13,11 +13,9 @@
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "express-session": "^1.13.0",
-    "flux": "^2.1.1",
-    "fs": "0.0.2",
-    "keymirror": "^0.1.1",
     "path": "^0.12.7",
     "react": "^0.14.6",
+    "react-bootstrap": "^0.28.2",
     "react-dom": "^0.14.6",
     "recordrtc": "^5.2.6",
     "whatwg-fetch": "^0.10.1"

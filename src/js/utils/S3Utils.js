@@ -31,11 +31,14 @@ export default function S3Upload(fileInfo) { //parameters: type, data, id
     .then((s3Info) => {
       // upload to S3
       var xhr = createCORSRequest('PUT', s3Info.signedUrl);
-      
+
       xhr.onload = function() {
         if (xhr.status === 200) {
+          console.log(xhr.status)
           resolve(true);
         } else {
+          console.log(xhr.status)
+          
           reject(xhr.status);
         }
       };

@@ -1,8 +1,9 @@
 import React from 'react';
 import RecordRTC from 'recordrtc';
-import { captureUserMedia, prepareData } from '../utils/RecordUtils';
+import { captureUserMedia } from '../utils/RecordUtils';
 import Webcam from './Webcam.react';
 import S3Upload from '../utils/S3Utils';
+import { Modal } from 'react-bootstrap';
 
 const hasGetUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
                         navigator.mozGetUserMedia || navigator.msGetUserMedia);
@@ -15,13 +16,13 @@ class RecordPage extends React.Component {
       recordVideo: null,
       mediaStream: null,
       src: null,
-      uploadSuccess: null
+      uploadSuccess: null,
+      uploading: false
     };
 
     this.requestUserMedia = this.requestUserMedia.bind(this);
     this.startRecord = this.startRecord.bind(this);
     this.stopRecord = this.stopRecord.bind(this);
-    this.onStopRecording = this.onStopRecording.bind(this);
   }
 
   componentDidMount() {
@@ -58,17 +59,19 @@ class RecordPage extends React.Component {
 
   stopRecord() {
     this.state.recordVideo.stopRecording(() => {
-      var blob = this.state.recordVideo.blob;
-      console.log('blob: ', blob)
-      var params = {
+      let params = {
         type: 'video/webm',
-        data: blob,
-        id: 1234
+        data: this.state.recordVideo.blob,
+        id: Math.floor(Math.random()*90000) + 10000
       }
+      console.log(params)
+      this.setState({ uploading: true });
       S3Upload(params)
       .then((success) => {
+        console.log('enter then statement')
         if(success) {
-          this.setState({ uploadSuccess: true });
+          console.log(success)
+          this.setState({ uploadSuccess: true, uploading: false });
         }
       }, (error) => {
         alert(error, 'error occurred. check your aws settings and try again.')
@@ -76,14 +79,13 @@ class RecordPage extends React.Component {
     });
   }
 
-  onStopRecording() {
-  }
-
   render() {
     return(
       <div>
-        {this.state.uploadSuccess ? <div>Upload success!</div> : null}
+        <Modal show={this.state.uploadSuccess}><Modal.Body>Upload success!</Modal.Body></Modal>
         <div><Webcam src={this.state.src}/></div>
+        {this.state.uploading ?
+          <div>Uploading...</div> : null}
         <div><button onClick={this.startRecord}>Start Record</button></div>
       </div>
     )
