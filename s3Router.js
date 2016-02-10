@@ -20,7 +20,6 @@ function S3Router(options) {
     var filename = req.query.objectName;
     var mimeType = req.query.contentType;
     var ext = '.' + findType(mimeType);
-    console.log(ext);
     var fileKey = filename + ext;
 
     var s3 = new aws.S3();
