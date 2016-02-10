@@ -41,10 +41,7 @@ class RecordPage extends React.Component {
 
   startRecord() {
     captureUserMedia((stream) => {
-      this.state.recordVideo = RecordRTC(stream, {
-        type: 'video'
-      });
-
+      this.state.recordVideo = RecordRTC(stream, { type: 'video' });
       this.state.recordVideo.startRecording();
     });
 
@@ -62,7 +59,7 @@ class RecordPage extends React.Component {
       }
 
       this.setState({ uploading: true });
-      
+
       S3Upload(params)
       .then((success) => {
         console.log('enter then statement')
