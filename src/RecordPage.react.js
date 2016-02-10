@@ -47,7 +47,7 @@ class RecordPage extends React.Component {
 
     setTimeout(() => {
       this.stopRecord();
-    }, 5000);
+    }, 4000);
   }
 
   stopRecord() {

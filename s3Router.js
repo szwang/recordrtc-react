@@ -41,7 +41,7 @@ function S3Router(options) {
       console.log('data: ', data)
       res.json({
         signedUrl: data,
-        publicUrl: 'https://s3.amazonaws.com/recordrtc-test/' + fileKey,
+        publicUrl: 'https://s3.amazonaws.com/'+ S3_BUCKET + '/' + fileKey,
         filename: filename
       });
     });
