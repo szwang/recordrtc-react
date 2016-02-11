@@ -20,7 +20,6 @@ function S3Router(options) {
     var filename = req.query.objectName;
     var mimeType = req.query.contentType;
     var ext = '.' + findType(mimeType);
-    console.log(ext);
     var fileKey = filename + ext;
 
     var s3 = new aws.S3();
@@ -42,7 +41,7 @@ function S3Router(options) {
       console.log('data: ', data)
       res.json({
         signedUrl: data,
-        publicUrl: 'https://s3.amazonaws.com/recordrtc-test/' + fileKey,
+        publicUrl: 'https://s3.amazonaws.com/'+ S3_BUCKET + '/' + fileKey,
         filename: filename
       });
     });

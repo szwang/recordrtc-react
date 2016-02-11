@@ -13,7 +13,6 @@ class RecordPage extends React.Component {
 
     this.state = {
       recordVideo: null,
-      mediaStream: null,
       src: null,
       uploadSuccess: null,
       uploading: false
@@ -42,18 +41,13 @@ class RecordPage extends React.Component {
 
   startRecord() {
     captureUserMedia((stream) => {
-      this.setState({ mediaStream: stream });
-
-      this.state.recordVideo = RecordRTC(stream, {
-        type: 'video'
-      });
-
+      this.state.recordVideo = RecordRTC(stream, { type: 'video' });
       this.state.recordVideo.startRecording();
     });
 
     setTimeout(() => {
       this.stopRecord();
-    }, 5000);
+    }, 4000);
   }
 
   stopRecord() {
@@ -63,8 +57,9 @@ class RecordPage extends React.Component {
         data: this.state.recordVideo.blob,
         id: Math.floor(Math.random()*90000) + 10000
       }
-      console.log(params)
+
       this.setState({ uploading: true });
+
       S3Upload(params)
       .then((success) => {
         console.log('enter then statement')
